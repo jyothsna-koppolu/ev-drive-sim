@@ -118,7 +118,6 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
         <h2 className="font-display text-sm uppercase tracking-widest text-muted-foreground mb-4 text-center">Vehicle Type</h2>
         <div className="perspective-container flex justify-center gap-4">
           {vehicleTypes.map((vt, i) => {
-            const Icon = vt.icon;
             const selected = selection.type === vt.id;
             return (
               <motion.button
@@ -129,10 +128,10 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
                 whileHover={{ rotateY: 8, scale: 1.08 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setSelection({ ...selection, type: vt.id })}
-                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[130px]
+                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[150px]
                   ${selected ? 'neon-glow-green border-secondary/60' : 'hover:border-primary/30'}`}
               >
-                <Icon className={`w-10 h-10 ${selected ? 'text-secondary' : 'text-muted-foreground'}`} />
+                <img src={vt.image} alt={vt.label} className="w-16 h-16 object-contain" width={64} height={64} />
                 <span className={`font-display text-xs font-semibold tracking-wide ${selected ? 'text-secondary neon-text-green' : 'text-muted-foreground'}`}>
                   {vt.label}
                 </span>
