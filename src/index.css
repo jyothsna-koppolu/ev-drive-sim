@@ -60,7 +60,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Rajdhani', sans-serif;
-    background: linear-gradient(180deg, #020617 0%, #0F172A 50%, #020617 100%);
+    background: linear-gradient(135deg, #020617 0%, #0a1628 20%, #0d1f3c 40%, #091a2a 60%, #0c1a32 80%, #020617 100%);
     min-height: 100vh;
   }
 
