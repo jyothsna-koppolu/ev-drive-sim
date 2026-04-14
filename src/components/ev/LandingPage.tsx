@@ -1,9 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { VehicleSelection } from '@/pages/Index';
-import { Zap, Car, Bike, Truck } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import ev2Wheeler from '@/assets/ev-2wheeler.jpg';
 import ev3Wheeler from '@/assets/ev-3wheeler.jpg';
 import ev4Wheeler from '@/assets/ev-4wheeler.jpg';
+import icon2Wheeler from '@/assets/icon-2wheeler.png';
+import icon3Wheeler from '@/assets/icon-3wheeler.png';
+import icon4Wheeler from '@/assets/icon-4wheeler.png';
 
 const brands = [
   { name: 'Tata Motors', initials: 'T', color: '#0066CC' },
