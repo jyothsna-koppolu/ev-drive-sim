@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Gauge, Zap, Battery, Wind, Activity, Download } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { computeSimulation, generateSpeedSweep, generateDriveCycleData, type SimInputs, type DriveCycle } from '@/lib/evPhysics';
+import { computeSimulation, generateSpeedSweep, generateDriveCycleData, generateForceSweep, type SimInputs, type DriveCycle } from '@/lib/evPhysics';
 import type { VehicleSelection } from '@/pages/Index';
 
 interface Props {
@@ -23,6 +23,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
   const results = useMemo(() => computeSimulation(inputs), [inputs]);
   const speedSweep = useMemo(() => generateSpeedSweep(inputs), [inputs]);
   const cycleData = useMemo(() => generateDriveCycleData(inputs, driveCycle), [inputs, driveCycle]);
+  const forceSweep = useMemo(() => generateForceSweep(inputs), [inputs]);
 
   const kpis = [
     { label: 'Motor Speed', value: results.motorSpeed.toFixed(1), unit: 'RPM', icon: Gauge, color: 'text-primary' },
@@ -88,7 +89,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 min-h-0">
         {/* Speed vs Torque & Power */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="glass-card p-4 flex flex-col">
           <h3 className="font-display text-xs text-muted-foreground mb-2 uppercase tracking-wider">Speed vs Torque & Power</h3>
@@ -152,6 +153,26 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
                 <div className="font-display text-sm font-bold text-foreground">{k.value}</div>
               </div>
             ))}
+          </div>
+        </motion.div>
+
+        {/* Force Breakdown */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="glass-card p-4 flex flex-col">
+          <h3 className="font-display text-xs text-muted-foreground mb-2 uppercase tracking-wider">Force Breakdown vs Speed</h3>
+          <div className="flex-1 min-h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={forceSweep}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(217 33% 18%)" />
+                <XAxis dataKey="speed" stroke="hsl(215 20% 55%)" tick={{ fontSize: 10 }} label={{ value: 'Speed (km/h)', position: 'insideBottom', offset: -5, style: { fontSize: 10, fill: 'hsl(215 20% 55%)' } }} />
+                <YAxis stroke="hsl(215 20% 55%)" tick={{ fontSize: 10 }} label={{ value: 'Force (N)', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: 'hsl(215 20% 55%)' } }} />
+                <Tooltip contentStyle={{ backgroundColor: 'hsl(222 47% 8%)', border: '1px solid hsl(217 33% 18%)', borderRadius: 8, fontSize: 11 }} />
+                <Legend wrapperStyle={{ fontSize: 10 }} />
+                <Line type="monotone" dataKey="aero" stroke="hsl(199 89% 48%)" strokeWidth={2} dot={false} name="Aerodynamic" />
+                <Line type="monotone" dataKey="rolling" stroke="hsl(40 95% 55%)" strokeWidth={2} dot={false} name="Rolling Resistance" />
+                <Line type="monotone" dataKey="gradient" stroke="hsl(152 69% 45%)" strokeWidth={2} dot={false} name="Gradient" />
+                <Line type="monotone" dataKey="total" stroke="hsl(340 82% 60%)" strokeWidth={2} dot={false} name="Total Tractive" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </motion.div>
       </div>

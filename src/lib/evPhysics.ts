@@ -155,3 +155,18 @@ export function generateSpeedSweep(inputs: SimInputs): { speed: number; torque: 
   }
   return data;
 }
+
+export function generateForceSweep(inputs: SimInputs): { speed: number; aero: number; rolling: number; gradient: number; total: number }[] {
+  const data = [];
+  for (let s = 0; s <= 150; s += 5) {
+    const sim = computeSimulation({ ...inputs, vehicleSpeed: s });
+    data.push({
+      speed: s,
+      aero: Math.round(sim.aerodynamicForce * 100) / 100,
+      rolling: Math.round(sim.rollingResistanceForce * 100) / 100,
+      gradient: Math.round(sim.gradientForce * 100) / 100,
+      total: Math.round(sim.totalTractiveForce * 100) / 100,
+    });
+  }
+  return data;
+}
