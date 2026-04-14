@@ -14,8 +14,7 @@ interface Props {
 const cycles: { id: DriveCycle; label: string }[] = [
   { id: 'urban', label: 'Urban' },
   { id: 'highway', label: 'Highway' },
-  { id: 'uphill', label: 'Uphill' },
-  { id: 'braking', label: 'Braking' },
+  { id: 'mixed', label: 'Mixed' },
 ];
 
 const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
@@ -109,7 +108,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
           </div>
         </motion.div>
 
-        {/* PWM Drive Cycle */}
+        {/* PWM vs Drive Cycle — reference style */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="glass-card p-4 flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-display text-xs text-muted-foreground uppercase tracking-wider">PWM vs Drive Cycle</h3>
@@ -130,14 +129,29 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={cycleData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(217 33% 18%)" />
-                <XAxis dataKey="time" stroke="hsl(215 20% 55%)" tick={{ fontSize: 10 }} label={{ value: 'Time (%)', position: 'insideBottom', offset: -5, style: { fontSize: 10, fill: 'hsl(215 20% 55%)' } }} />
-                <YAxis stroke="hsl(215 20% 55%)" tick={{ fontSize: 10 }} />
+                <XAxis dataKey="time" stroke="hsl(215 20% 55%)" tick={{ fontSize: 10 }} label={{ value: 'Time (s)', position: 'insideBottom', offset: -5, style: { fontSize: 10, fill: 'hsl(215 20% 55%)' } }} />
+                <YAxis yAxisId="speed" stroke="hsl(199 89% 48%)" tick={{ fontSize: 10 }} label={{ value: 'm/s', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: 'hsl(199 89% 48%)' } }} />
+                <YAxis yAxisId="pwm" orientation="right" stroke="hsl(40 95% 55%)" tick={{ fontSize: 10 }} label={{ value: '% PWM', angle: 90, position: 'insideRight', style: { fontSize: 10, fill: 'hsl(40 95% 55%)' } }} />
                 <Tooltip contentStyle={{ backgroundColor: 'hsl(222 47% 8%)', border: '1px solid hsl(217 33% 18%)', borderRadius: 8, fontSize: 11 }} />
                 <Legend wrapperStyle={{ fontSize: 10 }} />
-                <Line type="monotone" dataKey="speed" stroke="hsl(199 89% 48%)" strokeWidth={2} dot={false} name="Speed (km/h)" />
-                <Line type="monotone" dataKey="pwm" stroke="hsl(152 69% 45%)" strokeWidth={2} dot={false} name="PWM (%)" />
+                <Line yAxisId="speed" type="monotone" dataKey="speed" stroke="hsl(199 89% 48%)" strokeWidth={2} dot={false} name="Speed (m/s)" />
+                <Line yAxisId="pwm" type="monotone" dataKey="pwm" stroke="hsl(40 95% 55%)" strokeWidth={2} dot={false} name="PWM (%)" />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+          {/* KPI row below chart */}
+          <div className="grid grid-cols-4 gap-2 mt-3">
+            {[
+              { label: 'PWM Duty Cycle', value: `${results.pwmDuty.toFixed(1)}%` },
+              { label: 'Wheel Torque', value: `${results.wheelTorque.toFixed(2)} Nm` },
+              { label: 'Wheel Speed', value: `${results.wheelSpeed.toFixed(2)} rad/s` },
+              { label: 'GVW', value: `${results.gvw.toFixed(1)} N` },
+            ].map(k => (
+              <div key={k.label} className="glass-card p-2 text-center">
+                <div className="text-muted-foreground text-[9px] font-body">{k.label}</div>
+                <div className="font-display text-sm font-bold text-foreground">{k.value}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
