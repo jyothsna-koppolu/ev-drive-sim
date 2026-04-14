@@ -73,35 +73,39 @@ const InputDashboard = ({ selection, onBack, onSimulate }: Props) => {
   return (
     <div className="relative min-h-screen flex flex-col z-10 p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={onBack}
           className="glass-card px-4 py-2 flex items-center gap-2 text-muted-foreground hover:text-foreground cursor-pointer">
           <ArrowLeft className="w-4 h-4" />
           <span className="font-body text-sm">Back</span>
         </motion.button>
         <div className="text-center">
-          <h1 className="font-display text-xl text-primary neon-text-blue">Input Dashboard</h1>
+          <h1 className="font-display text-lg md:text-xl text-primary neon-text-blue">Input Dashboard</h1>
           <p className="text-muted-foreground text-xs font-body">{selection.brand} • {selection.type}</p>
         </div>
         <div className="w-20" />
       </div>
 
       {/* Constants */}
-      <div className="flex justify-center gap-3 mb-4">
+      <div className="flex justify-center gap-3 mb-3">
         {[
           { label: 'Air Density', value: `${AIR_DENSITY} kg/m³` },
           { label: 'Gravity', value: `${GRAVITY} m/s²` },
         ].map(c => (
-          <div key={c.label} className="glass-card-locked px-4 py-2 flex items-center gap-2">
-            <Lock className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground font-body">{c.label}:</span>
-            <span className="text-xs text-foreground font-display font-semibold">{c.value}</span>
-          </div>
+          <motion.div
+            key={c.label}
+            whileHover={{ rotateX: -3, rotateY: 3 }}
+            className="card-3d glass-card-locked px-5 py-3 flex items-center gap-2"
+          >
+            <Lock className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground font-body">{c.label}:</span>
+            <span className="text-sm text-foreground font-display font-semibold">{c.value}</span>
+          </motion.div>
         ))}
       </div>
 
       {/* Input Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 flex-1">
+      <div className="perspective-container grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 flex-1">
         {fields.map((f, i) => {
           const Icon = f.icon;
           const err = errors[f.key];
@@ -111,23 +115,28 @@ const InputDashboard = ({ selection, onBack, onSimulate }: Props) => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className={`glass-card p-3 flex flex-col gap-1 ${err ? 'border-destructive/50' : ''}`}
+              whileHover={{ rotateX: -2, rotateY: 2, scale: 1.02 }}
+              className={`card-3d glass-card p-3 flex flex-col gap-1.5 ${err ? 'border-destructive/50' : ''}`}
             >
-              <label className="flex items-center gap-1.5 text-sm font-body text-muted-foreground">
-                <Icon className="w-3.5 h-3.5 text-primary/60" />
-                {f.label}
-                {f.unit && <span className="text-xs text-primary/40">({f.unit})</span>}
+              <label className="flex items-center gap-1.5 font-body text-muted-foreground" style={{ fontSize: '16px' }}>
+                <Icon className="w-4 h-4 text-primary/70 flex-shrink-0" />
+                <span className="truncate">{f.label}</span>
+                {f.unit && <span className="text-primary/40 text-xs">({f.unit})</span>}
               </label>
-              <input
-                type="number"
-                step={f.step}
-                min={f.min}
-                max={f.max}
-                value={values[f.key] ?? ''}
-                onChange={e => setValue(f.key, e.target.value)}
-                placeholder={`${f.min}–${f.max}`}
-                className="input-futuristic w-full"
-              />
+              <div className="relative">
+                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 pointer-events-none" />
+                <input
+                  type="number"
+                  step={f.step}
+                  min={f.min}
+                  max={f.max}
+                  value={values[f.key] ?? ''}
+                  onChange={e => setValue(f.key, e.target.value)}
+                  placeholder={`${f.min}–${f.max}`}
+                  className="input-futuristic w-full pl-9"
+                  style={{ fontSize: '20px' }}
+                />
+              </div>
               {f.hasSlider && values[f.key] && (
                 <input
                   type="range"
@@ -136,7 +145,7 @@ const InputDashboard = ({ selection, onBack, onSimulate }: Props) => {
                   step={f.step}
                   value={parseFloat(values[f.key]) || f.min}
                   onChange={e => setValue(f.key, e.target.value)}
-                  className="w-full h-1.5 bg-muted rounded-full appearance-none cursor-pointer accent-primary mt-1"
+                  className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary mt-1"
                 />
               )}
               {err && <span className="text-destructive text-xs font-body">{err}</span>}
@@ -148,10 +157,10 @@ const InputDashboard = ({ selection, onBack, onSimulate }: Props) => {
       {/* Simulate Button */}
       <div className="flex justify-center mt-4">
         <motion.button
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleSimulate}
-          className="gradient-btn font-display text-base font-bold px-10 py-3 rounded-xl text-primary-foreground tracking-wider cursor-pointer pulse-glow"
+          className="gradient-btn font-display text-base font-bold px-12 py-4 rounded-xl text-primary-foreground tracking-wider cursor-pointer pulse-glow"
         >
           <span className="flex items-center gap-2">
             <Play className="w-5 h-5" />
