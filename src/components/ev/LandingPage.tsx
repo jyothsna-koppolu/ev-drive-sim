@@ -88,17 +88,23 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
         <div className="perspective-container flex flex-wrap justify-center gap-3">
           {brands.map((brand, i) => (
             <motion.button
-              key={brand}
+              key={brand.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.05 }}
               whileHover={{ rotateX: -5, rotateY: 5, scale: 1.08, z: 30 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setSelection({ ...selection, brand })}
-              className={`card-3d glass-card px-6 py-4 font-display text-sm font-semibold tracking-wide cursor-pointer transition-all duration-300
-                ${selection.brand === brand ? 'neon-glow-blue border-primary/60 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              onClick={() => setSelection({ ...selection, brand: brand.name })}
+              className={`card-3d glass-card px-5 py-3 font-display text-sm font-semibold tracking-wide cursor-pointer transition-all duration-300 flex items-center gap-2.5
+                ${selection.brand === brand.name ? 'neon-glow-blue border-primary/60 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              {brand}
+              <span
+                className="flex items-center justify-center rounded-full text-white font-bold text-[10px] shrink-0"
+                style={{ background: brand.color, width: 28, height: 28, boxShadow: `0 0 10px ${brand.color}60` }}
+              >
+                {brand.initials}
+              </span>
+              {brand.name}
             </motion.button>
           ))}
         </div>
