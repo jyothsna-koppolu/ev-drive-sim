@@ -1,6 +1,9 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { VehicleSelection } from '@/pages/Index';
 import { Zap, Car, Bike, Truck } from 'lucide-react';
+import ev2Wheeler from '@/assets/ev-2wheeler.jpg';
+import ev3Wheeler from '@/assets/ev-3wheeler.jpg';
+import ev4Wheeler from '@/assets/ev-4wheeler.jpg';
 
 const brands = ['Tata Motors', 'Tesla', 'Mahindra', 'Hyundai', 'BYD'];
 const vehicleTypes = [
@@ -8,6 +11,12 @@ const vehicleTypes = [
   { id: '3-Wheeler', icon: Truck, label: '3-Wheeler' },
   { id: '4-Wheeler', icon: Car, label: '4-Wheeler' },
 ];
+
+const vehicleImages: Record<string, string> = {
+  '2-Wheeler': ev2Wheeler,
+  '3-Wheeler': ev3Wheeler,
+  '4-Wheeler': ev4Wheeler,
+};
 
 interface Props {
   selection: VehicleSelection;
@@ -17,19 +26,48 @@ interface Props {
 
 const LandingPage = ({ selection, setSelection, onStart }: Props) => {
   const canStart = selection.brand && selection.type;
+  const bgImage = selection.type ? vehicleImages[selection.type] : null;
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 z-10">
+    <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 z-10 overflow-hidden">
+      {/* Dynamic EV Background */}
+      <AnimatePresence mode="wait">
+        {bgImage && (
+          <motion.div
+            key={selection.type}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 0.18, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-0 pointer-events-none"
+          >
+            <img
+              src={bgImage}
+              alt=""
+              className="w-full h-full object-cover floating-animation"
+              style={{ filter: 'blur(3px)' }}
+              width={1920}
+              height={1080}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/40" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Title */}
-      <motion.div initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-        <h1 className="font-display text-3xl md:text-5xl font-bold text-primary neon-text-blue mb-3">
-          EV Simulator
+      <motion.div initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }} className="text-center mb-8 relative z-10">
+        <h1 className="font-display text-2xl md:text-4xl lg:text-5xl font-bold text-primary neon-text-blue mb-3 leading-tight">
+          Automated Motor Speed Control
+          <br />
+          <span className="text-secondary neon-text-green">&amp; Braking System</span>
         </h1>
-        <p className="text-muted-foreground text-lg font-body">3D Electric Vehicle Performance Simulator</p>
+        <p className="text-muted-foreground text-base md:text-lg font-body mt-2">
+          PWM-Based Electric Vehicle Simulator with Real-Time Physics
+        </p>
       </motion.div>
 
       {/* Brand Selection */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="w-full max-w-4xl mb-8">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="w-full max-w-4xl mb-8 relative z-10">
         <h2 className="font-display text-sm uppercase tracking-widest text-muted-foreground mb-4 text-center">Select Brand</h2>
         <div className="perspective-container flex flex-wrap justify-center gap-3">
           {brands.map((brand, i) => (
@@ -38,7 +76,7 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.05 }}
-              whileHover={{ rotateX: -3, rotateY: 3, scale: 1.05 }}
+              whileHover={{ rotateX: -5, rotateY: 5, scale: 1.08, z: 30 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setSelection({ ...selection, brand })}
               className={`card-3d glass-card px-6 py-4 font-display text-sm font-semibold tracking-wide cursor-pointer transition-all duration-300
@@ -51,7 +89,7 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
       </motion.div>
 
       {/* Vehicle Type */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="w-full max-w-3xl mb-10">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="w-full max-w-3xl mb-10 relative z-10">
         <h2 className="font-display text-sm uppercase tracking-widest text-muted-foreground mb-4 text-center">Vehicle Type</h2>
         <div className="perspective-container flex justify-center gap-4">
           {vehicleTypes.map((vt, i) => {
@@ -63,13 +101,13 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.1 }}
-                whileHover={{ rotateY: 5, scale: 1.05 }}
+                whileHover={{ rotateY: 8, scale: 1.08 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setSelection({ ...selection, type: vt.id })}
-                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[120px]
+                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[130px]
                   ${selected ? 'neon-glow-green border-secondary/60' : 'hover:border-primary/30'}`}
               >
-                <Icon className={`w-8 h-8 ${selected ? 'text-secondary' : 'text-muted-foreground'}`} />
+                <Icon className={`w-10 h-10 ${selected ? 'text-secondary' : 'text-muted-foreground'}`} />
                 <span className={`font-display text-xs font-semibold tracking-wide ${selected ? 'text-secondary neon-text-green' : 'text-muted-foreground'}`}>
                   {vt.label}
                 </span>
@@ -84,21 +122,21 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8 }}
-        whileHover={canStart ? { scale: 1.05 } : {}}
+        whileHover={canStart ? { scale: 1.08 } : {}}
         whileTap={canStart ? { scale: 0.95 } : {}}
         disabled={!canStart}
         onClick={onStart}
-        className={`gradient-btn font-display text-lg font-bold px-12 py-4 rounded-xl text-primary-foreground tracking-wider transition-all duration-300
+        className={`relative z-10 gradient-btn font-display text-lg font-bold px-14 py-5 rounded-xl text-primary-foreground tracking-wider transition-all duration-300
           ${canStart ? 'pulse-glow cursor-pointer' : 'opacity-30 cursor-not-allowed'}`}
       >
         <span className="flex items-center gap-3">
-          <Zap className="w-5 h-5" />
+          <Zap className="w-6 h-6" />
           Start Simulation
         </span>
       </motion.button>
 
       {!canStart && (
-        <p className="text-muted-foreground text-sm mt-3 font-body">Select a brand and vehicle type to begin</p>
+        <p className="text-muted-foreground text-sm mt-3 font-body relative z-10">Select a brand and vehicle type to begin</p>
       )}
     </div>
   );

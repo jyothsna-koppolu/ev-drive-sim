@@ -56,7 +56,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
           <span className="font-body text-sm">Back</span>
         </motion.button>
         <div className="text-center">
-          <h1 className="font-display text-xl text-primary neon-text-blue">Simulation Results</h1>
+          <h1 className="font-display text-lg md:text-xl text-primary neon-text-blue">Simulation Results</h1>
           <p className="text-muted-foreground text-xs font-body">{selection.brand} • {selection.type}</p>
         </div>
         <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={exportCSV}
@@ -67,7 +67,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
+      <div className="perspective-container grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
         {kpis.map((kpi, i) => {
           const Icon = kpi.icon;
           return (
@@ -76,11 +76,12 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="glass-card p-3 text-center card-3d"
+              whileHover={{ rotateX: -5, rotateY: 5, scale: 1.05 }}
+              className="card-3d glass-card p-4 text-center"
             >
-              <Icon className={`w-5 h-5 mx-auto mb-1 ${kpi.color}`} />
-              <div className={`font-display text-xl font-bold ${kpi.color}`}>{kpi.value}</div>
-              <div className="text-muted-foreground text-[10px] font-body">{kpi.unit}</div>
+              <Icon className={`w-6 h-6 mx-auto mb-1 ${kpi.color}`} />
+              <div className={`font-display text-2xl font-bold ${kpi.color}`}>{kpi.value}</div>
+              <div className="text-muted-foreground text-xs font-body">{kpi.unit}</div>
               <div className="text-muted-foreground text-[10px] font-body mt-0.5">{kpi.label}</div>
             </motion.div>
           );
