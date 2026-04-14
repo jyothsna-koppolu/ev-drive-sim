@@ -1,9 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { VehicleSelection } from '@/pages/Index';
-import { Zap, Car, Bike, Truck } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import ev2Wheeler from '@/assets/ev-2wheeler.jpg';
 import ev3Wheeler from '@/assets/ev-3wheeler.jpg';
 import ev4Wheeler from '@/assets/ev-4wheeler.jpg';
+import icon2Wheeler from '@/assets/icon-2wheeler.png';
+import icon3Wheeler from '@/assets/icon-3wheeler.png';
+import icon4Wheeler from '@/assets/icon-4wheeler.png';
 
 const brands = [
   { name: 'Tata Motors', initials: 'T', color: '#0066CC' },
@@ -23,9 +26,9 @@ const brands = [
   { name: 'Hero Electric', initials: 'HE', color: '#E60012' },
 ];
 const vehicleTypes = [
-  { id: '2-Wheeler', icon: Bike, label: '2-Wheeler' },
-  { id: '3-Wheeler', icon: Truck, label: '3-Wheeler' },
-  { id: '4-Wheeler', icon: Car, label: '4-Wheeler' },
+  { id: '2-Wheeler', image: icon2Wheeler, label: '2-Wheeler' },
+  { id: '3-Wheeler', image: icon3Wheeler, label: '3-Wheeler' },
+  { id: '4-Wheeler', image: icon4Wheeler, label: '4-Wheeler' },
 ];
 
 const vehicleImages: Record<string, string> = {
@@ -115,7 +118,6 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
         <h2 className="font-display text-sm uppercase tracking-widest text-muted-foreground mb-4 text-center">Vehicle Type</h2>
         <div className="perspective-container flex justify-center gap-4">
           {vehicleTypes.map((vt, i) => {
-            const Icon = vt.icon;
             const selected = selection.type === vt.id;
             return (
               <motion.button
@@ -126,10 +128,10 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
                 whileHover={{ rotateY: 8, scale: 1.08 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setSelection({ ...selection, type: vt.id })}
-                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[130px]
+                className={`card-3d glass-card px-8 py-6 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 min-w-[150px]
                   ${selected ? 'neon-glow-green border-secondary/60' : 'hover:border-primary/30'}`}
               >
-                <Icon className={`w-10 h-10 ${selected ? 'text-secondary' : 'text-muted-foreground'}`} />
+                <img src={vt.image} alt={vt.label} className="w-16 h-16 object-contain" width={64} height={64} />
                 <span className={`font-display text-xs font-semibold tracking-wide ${selected ? 'text-secondary neon-text-green' : 'text-muted-foreground'}`}>
                   {vt.label}
                 </span>
