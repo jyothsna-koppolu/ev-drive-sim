@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Gauge, Zap, Battery, Wind, Activity, Download } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { computeSimulation, generateSpeedSweep, generateDriveCycleData, type SimInputs, type DriveCycle } from '@/lib/evPhysics';
+import { computeSimulation, generateSpeedSweep, generateDriveCycleData, generateForceSweep, type SimInputs, type DriveCycle } from '@/lib/evPhysics';
 import type { VehicleSelection } from '@/pages/Index';
 
 interface Props {
