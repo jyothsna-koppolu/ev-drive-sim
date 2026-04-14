@@ -5,7 +5,23 @@ import ev2Wheeler from '@/assets/ev-2wheeler.jpg';
 import ev3Wheeler from '@/assets/ev-3wheeler.jpg';
 import ev4Wheeler from '@/assets/ev-4wheeler.jpg';
 
-const brands = ['Tata Motors', 'Tesla', 'Mahindra', 'Hyundai', 'BYD', 'Ola Electric', 'MG Motor', 'Kia', 'BMW', 'Mercedes-Benz', 'Audi', 'Rivian', 'NIO', 'Ather Energy', 'Hero Electric'];
+const brands = [
+  { name: 'Tata Motors', initials: 'T', color: '#0066CC' },
+  { name: 'Tesla', initials: 'T', color: '#E31937' },
+  { name: 'Mahindra', initials: 'M', color: '#D4213D' },
+  { name: 'Hyundai', initials: 'H', color: '#002C5F' },
+  { name: 'BYD', initials: 'B', color: '#1A1A1A' },
+  { name: 'Ola Electric', initials: 'O', color: '#00B140' },
+  { name: 'MG Motor', initials: 'MG', color: '#C8102E' },
+  { name: 'Kia', initials: 'K', color: '#05141F' },
+  { name: 'BMW', initials: 'BMW', color: '#0066B1' },
+  { name: 'Mercedes-Benz', initials: 'MB', color: '#333333' },
+  { name: 'Audi', initials: 'A', color: '#BB0A30' },
+  { name: 'Rivian', initials: 'R', color: '#F5A623' },
+  { name: 'NIO', initials: 'N', color: '#00A0E8' },
+  { name: 'Ather Energy', initials: 'AE', color: '#00C853' },
+  { name: 'Hero Electric', initials: 'HE', color: '#E60012' },
+];
 const vehicleTypes = [
   { id: '2-Wheeler', icon: Bike, label: '2-Wheeler' },
   { id: '3-Wheeler', icon: Truck, label: '3-Wheeler' },
@@ -72,17 +88,23 @@ const LandingPage = ({ selection, setSelection, onStart }: Props) => {
         <div className="perspective-container flex flex-wrap justify-center gap-3">
           {brands.map((brand, i) => (
             <motion.button
-              key={brand}
+              key={brand.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.05 }}
               whileHover={{ rotateX: -5, rotateY: 5, scale: 1.08, z: 30 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setSelection({ ...selection, brand })}
-              className={`card-3d glass-card px-6 py-4 font-display text-sm font-semibold tracking-wide cursor-pointer transition-all duration-300
-                ${selection.brand === brand ? 'neon-glow-blue border-primary/60 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              onClick={() => setSelection({ ...selection, brand: brand.name })}
+              className={`card-3d glass-card px-5 py-3 font-display text-sm font-semibold tracking-wide cursor-pointer transition-all duration-300 flex items-center gap-2.5
+                ${selection.brand === brand.name ? 'neon-glow-blue border-primary/60 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              {brand}
+              <span
+                className="flex items-center justify-center rounded-full text-white font-bold text-[10px] shrink-0"
+                style={{ background: brand.color, width: 28, height: 28, boxShadow: `0 0 10px ${brand.color}60` }}
+              >
+                {brand.initials}
+              </span>
+              {brand.name}
             </motion.button>
           ))}
         </div>
