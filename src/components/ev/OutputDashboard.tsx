@@ -14,8 +14,7 @@ interface Props {
 const cycles: { id: DriveCycle; label: string }[] = [
   { id: 'urban', label: 'Urban' },
   { id: 'highway', label: 'Highway' },
-  { id: 'uphill', label: 'Uphill' },
-  { id: 'braking', label: 'Braking' },
+  { id: 'mixed', label: 'Mixed' },
 ];
 
 const OutputDashboard = ({ inputs, selection, onBack }: Props) => {

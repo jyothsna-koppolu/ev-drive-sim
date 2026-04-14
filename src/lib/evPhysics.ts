@@ -82,7 +82,7 @@ export function computeSimulation(inputs: SimInputs): SimResults {
   };
 }
 
-export type DriveCycle = 'urban' | 'highway' | 'uphill' | 'braking';
+export type DriveCycle = 'urban' | 'highway' | 'mixed';
 
 export interface DriveCyclePoint {
   time: number;
@@ -92,34 +92,48 @@ export interface DriveCyclePoint {
   power: number;
 }
 
+// Generate realistic trapezoidal drive cycle profiles (time in seconds)
+function urbanSpeedProfile(t: number): number {
+  // 5 stop-and-go cycles over 120 seconds, trapezoidal shape
+  const cycleLen = 24; // seconds per micro-cycle
+  const local = t % cycleLen;
+  if (local < 4) return (local / 4) * 40; // accelerate 0→40 km/h
+  if (local < 12) return 40; // cruise
+  if (local < 16) return 40 * (1 - (local - 12) / 4); // decelerate
+  return 0; // stopped
+}
+
+function highwaySpeedProfile(t: number): number {
+  if (t < 10) return (t / 10) * 100;
+  if (t < 90) return 100 + 20 * Math.sin((t - 10) * Math.PI / 40); // cruise ~100-120
+  return 120 * (1 - (t - 90) / 30); // decelerate
+}
+
+function mixedSpeedProfile(t: number): number {
+  if (t < 40) return urbanSpeedProfile(t); // urban portion
+  if (t < 50) return (t - 40) / 10 * 80; // ramp to highway
+  if (t < 100) return 80 + 15 * Math.sin((t - 50) * Math.PI / 25);
+  return 95 * (1 - (t - 100) / 20);
+}
+
 export function generateDriveCycleData(inputs: SimInputs, cycle: DriveCycle): DriveCyclePoint[] {
   const points: DriveCyclePoint[] = [];
-  const steps = 50;
+  const duration = 120; // seconds
 
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    let speed: number;
-
+  for (let t = 0; t <= duration; t++) {
+    let speedKmh: number;
     switch (cycle) {
-      case 'urban':
-        speed = 40 * Math.sin(t * Math.PI * 2) * 0.5 + 30;
-        break;
-      case 'highway':
-        speed = 80 + 40 * t;
-        break;
-      case 'uphill':
-        speed = 60 * (1 - 0.3 * t);
-        break;
-      case 'braking':
-        speed = 100 * (1 - t * t);
-        break;
+      case 'urban': speedKmh = urbanSpeedProfile(t); break;
+      case 'highway': speedKmh = highwaySpeedProfile(t); break;
+      case 'mixed': speedKmh = mixedSpeedProfile(t); break;
     }
-    speed = Math.max(0, speed);
+    speedKmh = Math.max(0, speedKmh);
+    const speedMs = speedKmh / 3.6;
 
-    const sim = computeSimulation({ ...inputs, vehicleSpeed: speed });
+    const sim = computeSimulation({ ...inputs, vehicleSpeed: speedKmh });
     points.push({
-      time: Math.round(t * 100),
-      speed: Math.round(speed * 10) / 10,
+      time: t,
+      speed: Math.round(speedMs * 100) / 100,
       pwm: Math.round(sim.pwmDuty * 10) / 10,
       torque: Math.round(sim.motorTorque * 100) / 100,
       power: Math.round(sim.motorPower),
