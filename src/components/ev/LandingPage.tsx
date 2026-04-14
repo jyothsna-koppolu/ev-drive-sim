@@ -5,7 +5,7 @@ import ev2Wheeler from '@/assets/ev-2wheeler.jpg';
 import ev3Wheeler from '@/assets/ev-3wheeler.jpg';
 import ev4Wheeler from '@/assets/ev-4wheeler.jpg';
 
-const brands = ['Tata Motors', 'Tesla', 'Mahindra', 'Hyundai', 'BYD'];
+const brands = ['Tata Motors', 'Tesla', 'Mahindra', 'Hyundai', 'BYD', 'Ola Electric', 'MG Motor', 'Kia', 'BMW', 'Mercedes-Benz', 'Audi', 'Rivian', 'NIO', 'Ather Energy', 'Hero Electric'];
 const vehicleTypes = [
   { id: '2-Wheeler', icon: Bike, label: '2-Wheeler' },
   { id: '3-Wheeler', icon: Truck, label: '3-Wheeler' },
