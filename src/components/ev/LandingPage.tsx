@@ -26,9 +26,9 @@ const brands = [
   { name: 'Hero Electric', initials: 'HE', color: '#E60012' },
 ];
 const vehicleTypes = [
-  { id: '2-Wheeler', icon: Bike, label: '2-Wheeler' },
-  { id: '3-Wheeler', icon: Truck, label: '3-Wheeler' },
-  { id: '4-Wheeler', icon: Car, label: '4-Wheeler' },
+  { id: '2-Wheeler', image: icon2Wheeler, label: '2-Wheeler' },
+  { id: '3-Wheeler', image: icon3Wheeler, label: '3-Wheeler' },
+  { id: '4-Wheeler', image: icon4Wheeler, label: '4-Wheeler' },
 ];
 
 const vehicleImages: Record<string, string> = {
