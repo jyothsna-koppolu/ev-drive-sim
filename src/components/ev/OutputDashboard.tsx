@@ -23,7 +23,7 @@ const OutputDashboard = ({ inputs, selection, onBack }: Props) => {
   const results = useMemo(() => computeSimulation(inputs), [inputs]);
   const speedSweep = useMemo(() => generateSpeedSweep(inputs), [inputs]);
   const cycleData = useMemo(() => generateDriveCycleData(inputs, driveCycle), [inputs, driveCycle]);
-  const forceSweep = useMemo(() => generateForceSweep(inputs), [inputs]);
+  
 
   const kpis = [
     { label: 'Motor Speed', value: results.motorSpeed.toFixed(1), unit: 'RPM', icon: Gauge, color: 'text-primary' },
